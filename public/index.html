@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineList | Movie Watchlist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">🎬 CineList</a>
+    <span class="tagline">Your personal movie collection</span>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">YOUR MOVIE JOURNEY</p>
+      <h1>Keep track of every story.</h1>
+      <p>Discover movies, build your watchlist, and keep track of what you've watched.</p>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <span>Total Movies</span>
+        <strong id="totalCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>Watched</span>
+        <strong id="watchedCount">0</strong>
+      </article>
+      <article class="stat-card">
+        <span>To Watch</span>
+        <strong id="unwatchedCount">0</strong>
+      </article>
+    </section>
+
+    <div id="message" class="message hidden" role="status"></div>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DISCOVER</p>
+          <h2>Find a movie</h2>
+        </div>
+      </div>
+
+      <form id="searchForm" class="search-row">
+        <input id="searchInput" type="search"
+          placeholder="Search a movie title..." required>
+        <button type="submit">Search OMDb</button>
+      </form>
+      <div id="searchResults" class="movie-grid"></div>
+    </section>
+
+    <section class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">YOUR COLLECTION</p>
+          <h2>My Watchlist</h2>
+        </div>
+      </div>
+
+      <form id="addForm" class="add-form">
+        <input id="movieTitle" placeholder="Movie title" required>
+        <input id="movieGenre" placeholder="Genre" required>
+        <input id="movieYear" type="number" placeholder="Year"
+          min="1888" max="2100" required>
+        <button type="submit">Add Movie</button>
+      </form>
+
+      <div class="filter-row">
+        <input id="filterInput" type="search"
+          placeholder="Filter by movie title...">
+
+        <select id="statusFilter">
+          <option value="all">All movies</option>
+          <option value="unwatched">To Watch</option>
+          <option value="watched">Watched</option>
+        </select>
+
+        <select id="sortSelect">
+          <option value="newest">Recently added</option>
+          <option value="title">Title A–Z</option>
+          <option value="year">Year: newest first</option>
+        </select>
+      </div>
+
+      <div id="watchlist" class="movie-grid"></div>
+    </section>
+  </main>
+
+  <dialog id="editDialog">
+    <form id="editForm" class="dialog-content">
+      <h2>Edit movie</h2>
+      <input id="editId" type="hidden">
+
+      <label for="editTitle">Title</label>
+      <input id="editTitle" required>
+
+      <label for="editGenre">Genre</label>
+      <input id="editGenre" required>
+
+      <label for="editYear">Year</label>
+      <input id="editYear" type="number" required>
+
+      <div class="dialog-actions">
+        <button type="button" class="secondary"
+          id="cancelEdit">Cancel</button>
+        <button type="submit">Save Changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="detailsDialog">
+    <div id="detailsContent" class="dialog-content"></div>
+    <div class="dialog-actions">
+      <button type="button" class="secondary"
+        id="closeDetails">Close</button>
+    </div>
+  </dialog>
+
+  <footer>
+    <p>CineList · Built for Integrative Programming and Technology</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
