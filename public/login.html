@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineList | Authentication</title>
+
+  <!-- FAVICON / BROWSER TAB LOGO -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  
+  <!-- INLINE SVG LOGO FALLBACK (Displays immediately in browser tab) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 20%, #0d1a29, #04060d);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 32px;
+      border: 1px solid rgba(88, 199, 255, 0.2);
+      border-radius: 20px;
+      background: rgba(13, 26, 41, 0.85);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      box-sizing: border-box;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #58c7ff;
+      letter-spacing: -0.5px;
+      margin: 0 0 6px 0;
+    }
+
+    .brand-subtitle {
+      color: #8896ae;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      color: #b7c4db;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(110, 175, 255, 0.18);
+      border-radius: 9px;
+      background: #07111d;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #58c7ff;
+      box-shadow: 0 0 0 3px rgba(88, 199, 255, 0.15);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #58c7ff, #3578ff);
+      color: #04060d;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, filter 0.15s;
+    }
+
+    .btn-submit:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .message {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.88rem;
+      min-height: 20px;
+    }
+
+    .switch-mode {
+      margin-top: 22px;
+      text-align: center;
+      color: #8896ae;
+      font-size: 0.88rem;
+    }
+
+    .switch-mode a {
+      color: #58c7ff;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    .switch-mode a:hover {
+      text-decoration: underline;
+    }
+
+    #registerForm {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="brand-title">✦ CineList</h1>
+      <p class="brand-subtitle">Your personal movie watchlist</p>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" class="auth-form">
+      <div class="form-group">
+        <label for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-submit">Log In</button>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form id="registerForm" class="auth-form">
+      <div class="form-group">
+        <label for="registerUsername">Username</label>
+        <input type="text" id="registerUsername" placeholder="Choose a username" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="registerPassword">Password</label>
+        <input type="password" id="registerPassword" placeholder="Choose a password" required autocomplete="new-password">
+      </div>
+      <button type="submit" class="btn-submit">Create Account</button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <div class="switch-mode">
+      <span id="switchText">Don't have an account?</span>
+      <a id="switchMode">Create one</a>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+    const switchMode = document.getElementById("switchMode");
+    const switchText = document.getElementById("switchText");
+
+    // LOGIN
+    loginForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      message.textContent = "";
+
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      try {
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+
+        window.location.href = "/";
+      } catch (error) {
+        message.style.color = "#ff6878";
+        message.textContent = error.message;
+      }
+    });
+
+    // REGISTER
+    registerForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      message.textContent = "";
+
+      const username = document.getElementById("registerUsername").value;
+      const password = document.getElementById("registerPassword").value;
+
+      try {
+        const response = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message);
+
+        message.style.color = "#55dfa4";
+        message.textContent = "Account created! You can now log in.";
+        registerForm.reset();
+
+        setTimeout(() => {
+          registerForm.style.display = "none";
+          loginForm.style.display = "flex";
+          switchText.textContent = "Don't have an account?";
+          switchMode.textContent = "Create one";
+          message.textContent = "";
+        }, 1200);
+
+      } catch (error) {
+        message.style.color = "#ff6878";
+        message.textContent = error.message;
+      }
+    });
+
+    // SWITCH MODE
+    switchMode.addEventListener("click", () => {
+      message.textContent = "";
+      if (loginForm.style.display !== "none") {
+        loginForm.style.display = "none";
+        registerForm.style.display = "flex";
+        switchText.textContent = "Already have an account?";
+        switchMode.textContent = "Log In";
+      } else {
+        loginForm.style.display = "flex";
+        registerForm.style.display = "none";
+        switchText.textContent = "Don't have an account?";
+        switchMode.textContent = "Create one";
+      }
+    });
+  </script>
+</body>
+</html>

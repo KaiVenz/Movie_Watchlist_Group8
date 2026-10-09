@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+*.env
+
+# Generated & user data
+movieslist/featured.json
+movieslist/users.json
+movieslist/*.log
+*.log
